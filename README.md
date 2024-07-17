@@ -70,6 +70,92 @@ In order to get started on this next section you will need to change your git br
 
 To verify that our helm chart has successfully deployed we can run the following command: `kubectl get helmrelease -n flux-system` or with flux CLI `flux get all`
 
-To reconile your resources you can run this command.
+```
+NAME                   	REVISION          	SUSPENDED	READY	MESSAGE                                           
+gitrepository/core-repo	main@sha1:5d144414	False    	True 	stored artifact for revision 'main@sha1:5d144414'	
+
+NAME                         	REVISION	SUSPENDED	READY	MESSAGE                  
+helmrepository/metrics-server	        	False    	True 	Helm repository is Ready	
+
+NAME                                	REVISION	SUSPENDED	READY	MESSAGE                                            
+helmchart/flux-system-metrics-server	7.2.8   	False    	True 	pulled 'metrics-server' chart with version '7.2.8'	
+
+NAME                      	REVISION	SUSPENDED	READY	MESSAGE                                                                                          
+helmrelease/metrics-server	7.2.8   	False    	True 	Helm install succeeded for release kube-system/metrics-server.v1 with chart metrics-server@7.2.8	
+
+NAME                          	REVISION          	SUSPENDED	READY	MESSAGE                              
+kustomization/common-apps     	main@sha1:5d144414	False    	True 	Applied revision: main@sha1:5d144414	
+kustomization/development-apps	main@sha1:5d144414	False    	True 	Applied revision: main@sha1:5d144414	
+```
+
+You can see that the common app of metrics-server is deployed
+```shell
+kubectl get po -n kube-system
+```
+
+To reconile your resources you can run this command if you made any changes.
 `flux reconcile kustomization common-apps --with-source`
 Which reconciles both your kustomization and gitRepository resources with any latest changes.
+
+## Layout of the project
+
+```
+.
+├── LICENSE
+├── README.md
+├── apps
+│   ├── Kustomization
+│   ├── base
+│   │   └── harbor
+│   │       ├── Kustomization
+│   │       ├── helmrelease.yaml
+│   │       └── helmrepository.yaml
+│   ├── development
+│   │   ├── Kustomization
+│   │   └── harbor-values.yaml
+│   └── production
+│       ├── Kustomization
+│       └── harbor-values.yaml
+├── bootstrap
+│   ├── kubernetes.tf
+│   └── terraform.tfvars
+├── clusters
+│   ├── build
+│   │   ├── Kustomization
+│   │   ├── apps.yaml
+│   │   └── common-apps.yaml
+│   ├── development
+│   │   ├── Kustomization
+│   │   ├── apps.yaml
+│   │   └── common-apps.yaml
+│   ├── harbor
+│   │   ├── Kustomization
+│   │   ├── apps.yaml
+│   │   └── common-apps.yaml
+│   ├── production
+│   │   ├── Kustomization
+│   │   ├── apps.yaml
+│   │   └── common-apps.yaml
+│   └── staging
+│       ├── Kustomization
+│       ├── apps.yaml
+│       └── common-apps.yaml
+├── common
+│   ├── Kustomization
+│   ├── base
+│   │   └── metrics-server
+│   │       ├── helmRelease.yaml
+│   │       ├── helmRepository.yaml
+│   │       └── kustomization.yaml
+│   ├── development
+│   │   ├── kustomization.yaml
+│   │   └── metrics-server-values.yaml
+│   └── production
+│       ├── kustomization.yaml
+│       └── metrics-server-values.yaml
+└── repo-configs
+    ├── development.yaml
+    ├── git-secret.yaml
+    ├── production.yaml
+    └── staging.yaml
+```
