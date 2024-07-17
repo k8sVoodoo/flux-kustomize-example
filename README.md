@@ -56,6 +56,8 @@ cd repo-configs && kubectl apply -f development.yaml
 ```
   - this will tell flux to fetch the current contents of your specified git repository to watch it for changes on your specified interval.
 
+You will notice this yaml file will point to the starting point at clusters/development -> deploy common-apps kustomization -> common/development -> kustomization additional values for that env -> common/base/metrics-server -> helmrelease/helmrepo with base values
+
 ### Managing Deployments
 Now that you have created your `kind: GitRepository` Flux will continue to watch your repo for any changes. But what does it do with that information???
 
