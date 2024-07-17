@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../base/metrics-server # path to the base service
+
+patches:
+  - path: metrics-server-values.yaml # looks for the file in this directory
+    target:
+      kind: HelmRelease
+      name: metrics-server # patches the additional values to this helmRelease
