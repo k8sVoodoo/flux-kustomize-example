@@ -8,7 +8,7 @@ spec:
   interval: 10m0s
   sourceRef:
     kind: GitRepository
-    name: core-repo
+    name: feature-repo
   path: ./apps/development
   prune: true
   wait: true
