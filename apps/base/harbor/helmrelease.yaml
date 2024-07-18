@@ -24,4 +24,4 @@ spec:
       retries: 3
   driftDetection:
     mode: enabled
-  #! your helm values
+  # your helm values
